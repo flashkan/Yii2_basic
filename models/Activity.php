@@ -72,4 +72,14 @@ class Activity extends Model
             'block' => 'Блокирующее событие'
         ];
     }
+
+    public function rules()
+    {
+        return [
+            [['title', 'idAuthor', 'body'], 'required'],
+            [['title', 'body'], 'string'],
+            [['idAuthor'], 'number'],
+            [['repetition', 'block'], 'boolean'],
+        ];
+    }
 }
