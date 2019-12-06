@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\SignupForm;
+use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -20,12 +22,17 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['logout', 'admin'],
                 'rules' => [
                     [
                         'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['admin'],
+                        'allow' => true,
+                        'roles' => ['admin'],
                     ],
                 ],
             ],
@@ -127,12 +134,41 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays some.
-     *
-     * @return string
+     * @return string|Response
+     * @throws \yii\base\Exception
      */
-    public function actionSome()
+    public function actionSignup()
     {
-        return $this->render('some');
+        $model = new SignupForm();
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                if (Yii::$app->getUser()->login($user)) {
+                    return $this->goHome();
+                }
+            }
+        }
+
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionAdmin()
+    {
+        echo 'hello admin';
+    }
+
+    /**
+     * @param $username
+     * @throws \Exception
+     */
+    public function actionSetAdminRoleToUser($username)
+    {
+        $user = User::findByUsername($username);
+        if (!\Yii::$app->user->can('admin')) {
+            $adminRole = \Yii::$app->authManager->getRole('admin');
+            \Yii::$app->authManager->assign($adminRole, $user->id);
+        }
     }
 }
