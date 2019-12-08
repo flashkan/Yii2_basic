@@ -14,21 +14,17 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'startDay')->textInput() ?>
+    <?= $form->field($model, 'startDay')->textInput()?>
 
-    <?= $form->field($model, 'endDay')->textInput() ?>
+    <?= $form->field($model, 'endDay')->textInput()?>
 
-    <?= $form->field($model, 'idAuthor')->textInput() ?>
+<!--    --><?//= $form->field($model, 'idAuthor')->textInput() ?>
 
     <?= $form->field($model, 'body')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'repetition')->textInput() ?>
+    <?= $form->field($model, 'repetition')->checkbox() ?>
 
-    <?= $form->field($model, 'block')->textInput() ?>
-
-    <?= $form->field($model, 'create_at')->textInput() ?>
-
-    <?= $form->field($model, 'update_at')->textInput() ?>
+    <?= $form->field($model, 'block')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

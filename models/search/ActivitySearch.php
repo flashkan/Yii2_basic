@@ -18,9 +18,13 @@ class ActivitySearch extends Activity
     {
         return [
             [['id', 'idAuthor', 'repetition', 'block'], 'integer'],
-            [['title', 'startDay', 'endDay', 'body', 'create_at', 'update_at'], 'safe'],
+            [['title', 'body', 'create_at', 'update_at'], 'safe'],
+            ['authorEmail', 'string'],
+            [['startDay', 'endDay'], 'date'],
         ];
     }
+
+    public $authorEmail;
 
     /**
      * {@inheritdoc}
@@ -55,12 +59,24 @@ class ActivitySearch extends Activity
             // $query->where('0=1');
             return $dataProvider;
         }
+        if (!empty($this->startDay)) {
+            $this->filterByDate('startDay', $query);
+        }
+
+        if (!empty($this->endDay)) {
+            $this->filterByDate('endDay', $query);
+        }
+
+        if (!empty($this->authorEmail)) {
+            $query->joinWith('author');
+            $query->andWhere(['like', 'user.email', $this->authorEmail]);
+        }
 
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'startDay' => $this->startDay,
-            'endDay' => $this->endDay,
+//            'startDay' => $this->startDay,
+//            'endDay' => $this->endDay,
             'idAuthor' => $this->idAuthor,
             'repetition' => $this->repetition,
             'block' => $this->block,
@@ -72,5 +88,20 @@ class ActivitySearch extends Activity
             ->andFilterWhere(['like', 'body', $this->body]);
 
         return $dataProvider;
+    }
+
+    /**
+     * @param $attr
+     * @param $query
+     */
+    public function filterByDate($attr, $query) {
+        $dayStart = \Yii::$app->formatter->asTimestamp($this->$attr . ' 00:00:00');
+        $endStart = \Yii::$app->formatter->asTimestamp($this->$attr . ' 23:59:59');
+        $query->andFilterWhere([
+            'between',
+            self::tableName() . ".$attr",
+            $dayStart,
+            $endStart,
+        ]);
     }
 }

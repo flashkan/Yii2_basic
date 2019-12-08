@@ -5,6 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'language' => 'ru',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -18,6 +19,12 @@ $config = [
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
+        ],
+        'formatter' => [
+            'defaultTimeZone' => 'Europe/Moscow',
+            'timeZone' => 'GMT+3',
+            'dateFormat' => 'php:d.m.Y',
+            'datetimeFormat' => 'php:d.m.Y H:i:s'
         ],
         'user' => [
             'identityClass' => 'app\models\User',
@@ -52,7 +59,7 @@ $config = [
         ],
 
         'authManager' => [
-            'class' => \yii\rbac\DbManager::class
+            'class' => \yii\rbac\DbManager::className()
         ]
         
     ],

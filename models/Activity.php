@@ -2,8 +2,8 @@
 
 namespace app\models;
 
-use Codeception\Events;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "activity".
@@ -19,7 +19,9 @@ use Yii;
  * @property string $create_at
  * @property string $update_at
  *
- * @property Events[] $events
+ * @property User $author
+ * @property Users[] $users
+ * @property Calendar[] $calendars
  */
 class Activity extends \yii\db\ActiveRecord
 {
@@ -37,26 +39,18 @@ class Activity extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'startDay', 'idAuthor'], 'required'],
-            [['startDay', 'endDay', 'create_at', 'update_at'], 'safe'],
+            [['title', 'startDay'], 'required'],
+            [['create_at', 'update_at'], 'safe'],
             [['idAuthor', 'repetition', 'block'], 'integer'],
+            [['repetition', 'block'], 'default', 'value' => 0],
             [['title', 'body'], 'string', 'max' => 255],
+            [['idAuthor'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['idAuthor' => 'id']],
+            ['idAuthor', 'default', 'value' => \Yii::$app->getUser()->id],
             [['endDay'], 'default', 'value' => function ($model) {
                 return $model->endDay = $model->startDay;
             }],
             [['endDay'], 'checkDate'],
-
         ];
-    }
-
-    /**
-     * Проверяет, что бы дата завершения была позже даты начала.
-     * В противном случае устанавливает дату завершения равной дате начала.
-     */
-    public function checkDate() {
-        $timeStart = strtotime($this->startDay);
-        $timeEnd = strtotime($this->endDay);
-        if ($timeStart > $timeEnd) $this->addError('endDay', 'End date must be more or equal start date');
     }
 
     /**
@@ -66,25 +60,68 @@ class Activity extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => 'Title',
-            'startDay' => 'Start Day',
-            'endDay' => 'End Day',
-            'idAuthor' => 'Id Author',
-            'body' => 'Body',
-            'repetition' => 'Repetition',
-            'block' => 'Block',
-            'create_at' => 'Create At',
-            'update_at' => 'Update At',
+            'title' => 'Название',
+            'startDay' => 'Дата и время начала',
+            'endDay' => 'Дата и время окончания',
+            'idAuthor' => 'Автор',
+            'body' => 'Описание',
+            'repetition' => 'Повторяющееся',
+            'block' => 'Блокирующее',
+            'create_at' => 'Дата создания',
+            'update_at' => 'Дата изменения',
+            'authorEmail' => 'Email Автора',
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'create_at',
+                'updatedAtAttribute' => 'update_at',
+                'value' => time(),
+            ]
+        ];
+    }
+
+    /**
+     * Проверяет, что бы дата завершения была позже даты начала.
+     * В противном случае устанавливает дату завершения равной дате начала.
+     */
+    public function checkDate()
+    {
+        $this->startDay = strtotime($this->startDay);
+        $this->endDay = strtotime($this->endDay);
+        if ($this->startDay > $this->endDay) $this->addError('endDay', 'End date must be more or equal start date');
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEvents()
+    public function getAuthor()
     {
-        return $this->hasMany(Events::className(), ['id_activity' => 'id']);
+        return $this->hasOne(User::className(), ['id' => 'idAuthor']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendars()
+    {
+        return $this->hasMany(Calendar::className(), ['id_activity' => 'id']);
+    }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getUsers()
+    {
+//        return $this->hasMany(User::className(), ['id' => 'id_user'])->via('calendar');
+        return $this->hasMany(User::className(), ['id' => 'id_user'])->viaTable('calendar', ['id_activity' => 'id']);
+    }
 }

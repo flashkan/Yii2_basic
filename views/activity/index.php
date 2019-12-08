@@ -25,19 +25,53 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'title',
-            'startDay',
-            'endDay',
+            [
+                'attribute' => 'startDay',
+                'filter' => \kartik\date\DatePicker::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'startDay',
+                    'language' => 'ru',
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'todayHighlight' => true,
+                        'format' => 'dd.mm.yyyy',
+                    ],
+                ]),
+                'value' => function (\app\models\Activity $model) {
+                    return Yii::$app->formatter->asDatetime($model->startDay);
+                }
+            ],
+            [
+                'attribute' => 'endDay',
+                'filter' => \kartik\date\DatePicker::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'endDay',
+                    'language' => 'ru',
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'todayHighlight' => true,
+                        'format' => 'dd.mm.yyyy',
+                    ],
+                ]),
+                'value' => function (\app\models\Activity $model) {
+                    return Yii::$app->formatter->asDatetime($model->endDay);
+                }
+            ],
             'idAuthor',
             'body',
-            'repetition',
-            'block',
-            'create_at',
-            'update_at',
-
+            'repetition:boolean',
+            'block:boolean',
+            [
+                'attribute' => 'authorEmail',
+                'format' => 'raw',
+                'value' => function (\app\models\Activity $model) {
+                    return Html::a($model->author->email, ['/user/view', 'id' => $model->author->id]);
+                }
+            ],
             ['class' => 'yii\grid\ActionColumn'],
+
         ],
     ]); ?>
 
