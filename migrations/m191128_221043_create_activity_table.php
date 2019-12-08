@@ -21,7 +21,7 @@ class m191128_221043_create_activity_table extends Migration
             'body' => $this->string(),
             'repetition' => $this->boolean(),
             'block' => $this->boolean(),
-            'create_at' => $this->dateTime(),
+            'create_at' => $this->integer(),
             'update_at' => $this->integer()
         ]);
     }
