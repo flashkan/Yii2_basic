@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "events".
+ * This is the model class for table "calendar".
  *
  * @property int $id
  * @property int $id_user
@@ -16,14 +16,14 @@ use Yii;
  * @property Activity $activity
  * @property User $user
  */
-class Events extends \yii\db\ActiveRecord
+class Calendar extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'events';
+        return 'calendar';
     }
 
     /**

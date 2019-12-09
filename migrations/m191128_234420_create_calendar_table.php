@@ -3,16 +3,16 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%events}}`.
+ * Handles the creation of table `calendar`.
  */
-class m191128_234420_create_events_table extends Migration
+class m191128_234420_create_calendar_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('{{%events}}', [
+        $this->createTable('calendar', [
             'id' => $this->primaryKey(),
             'id_user' => $this->integer(),
             'id_activity' => $this->integer(),
@@ -26,6 +26,6 @@ class m191128_234420_create_events_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%events}}');
+        $this->dropTable('calendar');
     }
 }
