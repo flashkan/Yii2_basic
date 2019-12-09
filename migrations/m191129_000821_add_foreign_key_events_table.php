@@ -12,7 +12,7 @@ class m191129_000821_add_foreign_key_events_table extends Migration
      */
     public function safeUp()
     {
-        $this->addForeignKey('events_users_key', 'events', 'id_user', 'users', 'id');
+        $this->addForeignKey('events_user_key', 'events', 'id_user', 'user', 'id');
         $this->addForeignKey('events_activity_key', 'events', 'id_activity', 'activity', 'id');
     }
 
@@ -21,7 +21,7 @@ class m191129_000821_add_foreign_key_events_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('events_users_key', 'events');
+        $this->dropForeignKey('events_user_key', 'events');
         $this->dropForeignKey('events_activity_key', 'events');
     }
 
