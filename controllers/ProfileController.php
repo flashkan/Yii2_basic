@@ -2,19 +2,20 @@
 
 namespace app\controllers;
 
-use app\models\SignupForm;
+use app\models\Activity;
+use app\models\search\ActivitySearch;
 use Yii;
 use app\models\User;
-use app\models\search\UserSearch;
+use app\models\search\ProfileSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * UsersController implements the CRUD actions for User model.
+ * ProfileController implements the CRUD actions for User model.
  */
-class UsersController extends Controller
+class ProfileController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,19 +31,12 @@ class UsersController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'create', 'update', 'view', 'delete'],
+                'only' => ['index', 'update', 'delete'],
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['update', 'view', 'delete'],
+                        'actions' => ['index', 'update', 'delete'],
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
-                            return +\Yii::$app->user->id === +\Yii::$app->request->get('id');
-                        }
-                    ],
-                    [
-                        'allow' => true,
-                        'roles' => ['admin'],
                     ],
                 ],
             ],
@@ -50,69 +44,32 @@ class UsersController extends Controller
     }
 
     /**
-     * Lists all User models.
-     * @return mixed
+     * @return string
+     * @throws NotFoundHttpException
      */
     public function actionIndex()
     {
-//        var_dump(\Yii::$app->user->id);
-
-        $searchModel = new UserSearch();
+        $searchModel = new ActivitySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
         return $this->render('index', [
-            'searchModel' => $searchModel,
+            'model' => $this->findModel(\Yii::$app->user->id),
             'dataProvider' => $dataProvider,
-        ]);
-
-
-    }
-
-    /**
-     * Displays a single User model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * @return string|\yii\web\Response
-     * @throws \yii\base\Exception
-     */
-    public function actionCreate()
-    {
-        $model = new SignupForm();
-
-        if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
-                return $this->redirect('index');
-            }
-        }
-
-        return $this->render('signup', [
-            'model' => $model,
+            'searchModel' => $searchModel,
         ]);
     }
 
     /**
      * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel(\Yii::$app->user->id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
@@ -121,15 +78,16 @@ class UsersController extends Controller
     }
 
     /**
-     * @param $id
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * Deletes an existing User model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete()
     {
-        $this->findModel($id)->delete();
+        $this->findModel(\Yii::$app->user->id)->delete();
+
         return $this->redirect(['index']);
     }
 
@@ -145,6 +103,7 @@ class UsersController extends Controller
         if (($model = User::findOne($id)) !== null) {
             return $model;
         }
+
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

@@ -44,7 +44,11 @@ class ActivitySearch extends Activity
      */
     public function search($params)
     {
-        $query = Activity::find();
+        if (\Yii::$app->user->can('admin')) {
+            $query = Activity::find();
+        } else {
+            $query = Activity::find()->where(['idAuthor' => \Yii::$app->user->id]);
+        }
 
         // add conditions that should always apply here
 
@@ -94,7 +98,8 @@ class ActivitySearch extends Activity
      * @param $attr
      * @param $query
      */
-    public function filterByDate($attr, $query) {
+    public function filterByDate($attr, $query)
+    {
         $dayStart = \Yii::$app->formatter->asTimestamp($this->$attr . ' 00:00:00');
         $endStart = \Yii::$app->formatter->asTimestamp($this->$attr . ' 23:59:59');
         $query->andFilterWhere([

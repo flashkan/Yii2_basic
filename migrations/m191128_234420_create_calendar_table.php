@@ -16,8 +16,8 @@ class m191128_234420_create_calendar_table extends Migration
             'id' => $this->primaryKey(),
             'id_user' => $this->integer(),
             'id_activity' => $this->integer(),
-            'create_at' => $this->date(),
-            'update_at' => $this->date()
+            'create_at' => $this->integer(),
+            'update_at' => $this->integer()
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "calendar".
@@ -54,9 +55,24 @@ class Calendar extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'create_at',
+                'updatedAtAttribute' => 'update_at',
+                'value' => time(),
+            ]
+        ];
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
-    public function getActivity()
+    public function getActivities()
     {
         return $this->hasOne(Activity::className(), ['id' => 'id_activity']);
     }

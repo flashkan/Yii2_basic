@@ -6,7 +6,11 @@ use yii\helpers\Html;
 /* @var $model app\models\Activity */
 
 $this->title = 'Create Activity';
-$this->params['breadcrumbs'][] = ['label' => 'Activities', 'url' => ['index']];
+if (\Yii::$app->user->can('admin')) {
+    $this->params['breadcrumbs'][] = ['label' => 'Activities', 'url' => ['index']];
+} else {
+    $this->params['breadcrumbs'][] = ['label' => 'Personal Account', 'url' => '\web\profile\index'];
+}
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="activity-create">

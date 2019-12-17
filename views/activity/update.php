@@ -6,7 +6,11 @@ use yii\helpers\Html;
 /* @var $model app\models\Activity */
 
 $this->title = 'Update Activity: ' . $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Activities', 'url' => ['index']];
+if (\Yii::$app->user->can('admin')) {
+    $this->params['breadcrumbs'][] = ['label' => 'Activities', 'url' => ['index']];
+} else {
+    $this->params['breadcrumbs'][] = ['label' => 'Personal Account', 'url' => '\web\profile\index'];
+}
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
