@@ -161,18 +161,6 @@ class SiteController extends Controller
         return $this->render('admin');
     }
 
-    public function actionPersonalAccount()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Activity::find()->where(['idAuthor' => \Yii::$app->user->id]),
-        ]);
-
-        return $this->render('..\users\view', [
-            'dataProvider' => $dataProvider,
-            'model' => \Yii::$app->user->identity,
-        ]);
-    }
-
     /**
      * @param $username
      * @throws \Exception
