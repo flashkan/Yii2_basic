@@ -2,12 +2,18 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use \yii\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\User */
+/* @var $action app\models\User */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = $model->id;
+$isPersonalAccount = \Yii::$app->requestedAction->id === 'personal-account';
+$this->title = $model->username;
+if (!$isPersonalAccount) {
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
+}
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -40,5 +46,29 @@ $this->params['breadcrumbs'][] = $this->title;
             'updated_at:datetime',
         ],
     ]) ?>
+
+    <?php
+    if ($isPersonalAccount) {
+        echo GridView::widget([
+            'dataProvider' => $dataProvider,
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+                'id',
+                'title',
+                'startDay:datetime',
+                'endDay:datetime',
+                'idAuthor',
+                'body',
+                'repetition:boolean',
+                'block:boolean',
+                'create_at:datetime',
+                'update_at:datetime',
+                ['class' => 'yii\grid\ActionColumn'],
+        ],
+        ]);
+    }
+    ?>
+
+
 
 </div>

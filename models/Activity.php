@@ -121,7 +121,6 @@ class Activity extends \yii\db\ActiveRecord
      */
     public function getUsers()
     {
-//        return $this->hasMany(User::className(), ['id' => 'id_user'])->via('calendar');
         return $this->hasMany(User::className(), ['id' => 'id_user'])->viaTable('calendar', ['id_activity' => 'id']);
     }
 }

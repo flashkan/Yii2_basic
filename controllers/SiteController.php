@@ -2,9 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\Activity;
 use app\models\SignupForm;
 use app\models\User;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
@@ -156,7 +158,19 @@ class SiteController extends Controller
 
     public function actionAdmin()
     {
-        echo 'hello admin';
+        return $this->render('admin');
+    }
+
+    public function actionPersonalAccount()
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Activity::find()->where(['idAuthor' => \Yii::$app->user->id]),
+        ]);
+
+        return $this->render('..\users\view', [
+            'dataProvider' => $dataProvider,
+            'model' => \Yii::$app->user->identity,
+        ]);
     }
 
     /**

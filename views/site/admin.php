@@ -9,3 +9,5 @@
     and all activities
     <?= \yii\helpers\Html::a('Activities', ['/activity'], ['class' => 'btn btn-primary']) ?>
 </p>
+
+<?//= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>

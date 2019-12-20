@@ -4,23 +4,14 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Activity */
+/* @var $model app\models\Calendar */
 
-$this->title = $model->title;
-if (\Yii::$app->user->can('admin')) {
-    $this->params['breadcrumbs'][] = ['label' => 'Activities', 'url' => ['index']];
-} else {
-    $this->params['breadcrumbs'][] = ['label' => 'Personal Account', 'url' => '\web\profile\index'];
-}
-
+$this->title = $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Calendars', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
-//var_dump($model->attributes);
-//foreach ($model->users as $user) {
-//    var_dump($user->attributes);
-//}
 ?>
-<div class="activity-view">
+<div class="calendar-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -39,15 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'title',
-            'startDay:datetime',
-            'endDay:datetime',
-            'idAuthor',
-            'body',
-            'repetition:boolean',
-            'block:boolean',
-            'create_at:datetime',
-            'update_at:datetime',
+            'id_user',
+            'id_activity',
+            'create_at',
+            'update_at',
         ],
     ]) ?>
 
