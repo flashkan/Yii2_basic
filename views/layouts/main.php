@@ -51,7 +51,7 @@ AppAsset::register($this);
         if (\Yii::$app->user->can('admin')) {
             $menuItems[] = ['label' => 'Admin', 'url' => ['/site/admin']];
         } else {
-            $menuItems[] = ['label' => 'Personal Account', 'url' => '/web/profile/index'];
+            $menuItems[] = ['label' => 'Personal Account', 'url' => '/profile/index'];
         }
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')

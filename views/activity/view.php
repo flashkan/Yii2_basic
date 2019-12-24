@@ -10,7 +10,7 @@ $this->title = $model->title;
 if (\Yii::$app->user->can('admin')) {
     $this->params['breadcrumbs'][] = ['label' => 'Activities', 'url' => ['index']];
 } else {
-    $this->params['breadcrumbs'][] = ['label' => 'Personal Account', 'url' => '\web\profile\index'];
+    $this->params['breadcrumbs'][] = ['label' => 'Personal Account', 'url' => '\profile\index'];
 }
 
 $this->params['breadcrumbs'][] = $this->title;
